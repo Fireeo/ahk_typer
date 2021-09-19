@@ -14,11 +14,12 @@ Main:
     SendEvent, {tab}{enter}
 return
 
-
 ; Start script
 F2::
     script_active := !script_active
     if(script_active){
+        Sendraw, %command%
+        SendEvent, {tab}{enter}
         Settimer, Main, %command_time%
     } else {
         Settimer, Main, Off

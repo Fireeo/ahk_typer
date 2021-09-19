@@ -6,8 +6,8 @@ guard_sec := 1
 
 ; Clue
 clue_command := "+m clue medium"
-clue_min := 0
-clue_sec := 1
+clue_min := 8
+clue_sec := 30
 ; End user variables
 
 ; Internal timing variables
