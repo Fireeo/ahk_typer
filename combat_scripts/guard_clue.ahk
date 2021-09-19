@@ -1,11 +1,12 @@
+~F2::
+Suspend
+return
+
 guards_command := "+k 100 guards"
 clue_command := "+m clue medium"
 guard_kill_time_min := 27
 clue_time_min := 27
 time_buffer_after_clue_sec := 2
-
-
-
 
 time_g := guard_kill_time_min * 3600000
 time_c := clue_time_min * 36000000
@@ -19,7 +20,7 @@ F2::
 	} else {
 		Settimer, Label, Off
 	}
-Return
+return
 
 Label:		
 	Sendraw, %guards_command%
@@ -36,6 +37,4 @@ Label:
 	Send {tab}{Enter}
 	Sleep time_g
 return
-		
-
 
