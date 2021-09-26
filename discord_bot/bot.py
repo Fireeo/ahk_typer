@@ -1,7 +1,17 @@
 import discord
+from ahk import AHK
 
-file = open("login.txt", "r")
-TOKEN = file.readline()
+command = "+m kill lizardman shaman"
+
+file_lines = open("login.txt", "r").read().splitlines()
+
+TOKEN = file_lines[0]
+DISCORD_USER_ID = file_lines[1]
+DISCORD_OSRS_BOT_RESPONSE_ID = file_lines[2]
+DISCORD_OSRS_BOT_NOTIFY_IDS = {file_lines[3], file_lines[4]}
+
+ahk = AHK()
+
 class MyClient(discord.Client):
 
     async def on_ready(self):
@@ -9,46 +19,33 @@ class MyClient(discord.Client):
         self.previous_author = ""
 
     async def on_message(self, message):
-        print(message.content)
-
         # don't respond to ourselves
         if message.author == self.user:
             return
+        # If its osrs bot
+        if str(message.author.id) in DISCORD_OSRS_BOT_NOTIFY_IDS:
 
-        minutes = 0
-        seconds = 0
+            # Sentence pre-process
+            remove_these = ".,'-+()%_=:;!#¤/<>@"
+            for character in remove_these:
+                message.content = message.content.replace(character, "")
+            message.content = " ".join(message.content.split())
+            message.content = message.content.split(' ')
 
-        # Sentence pre-process
-        remove_these = ".,'-+()%_=:;!#¤/"
-        for character in remove_these:
-            message.content = message.content.replace(character, "")
+            # Check if user is target user
+            if message.content[0] == DISCORD_USER_ID:
+                channel = client.get_channel(message.channel.id)
+                if not channel:
+                    print("No channel found")
+                    return
+                
+                # Send the command
+                ahk.send_raw(command)
+                ahk.key_press('Enter')
 
-        message.content = " ".join(message.content.split())
-        message.content = message.content.split(' ')
-
-        # Find minutes and seconds
-        for i in range(len(message.content)):
-            if message.content[i] == "minutes":
-                minutes = message.content[i-1]
-            if message.content[i] == "seconds":
-                seconds = message.content[i-1]
-        
-        # If they were found
-        string_result = ""
-        if minutes != 0 or seconds != 0:
-            string_result = str(self.previous_author) + "'s trip: " + str(minutes) + " minutes, " + str(seconds) + " seconds"
-        self.previous_author = message.author
-
-        if string_result=="":
-            print("No minutes in message")
+            #await channel.send(string_result)
             return
-
-        channel = client.get_channel(message.channel.id)
-        if not channel or string_result=="":
-            print("No channel found")
-            return
-        print(string_result)
-        #await channel.send(string_result)
+        print("Author mismatch!")
 
 
 
