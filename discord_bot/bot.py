@@ -56,11 +56,13 @@ class MyClient(discord.Client):
                     print("No channel found")
                     return
                 
-                # Send the command
-                ahk.send_raw(command)
-                ahk.key_press('Enter')
-                peepo_string = ":" + random.choice(peepos) + ":"
+                # Post 3 peepos in chat
+                peepo_string = ":" + random.choice(peepos) + ": " + ":" + random.choice(peepos) + ": " + ":" + random.choice(peepos) + ":"
                 ahk.send_raw(peepo_string)
+                ahk.key_press('Enter')
+
+                # Command
+                ahk.send_raw(command)
                 ahk.key_press('Enter')
 
             #await channel.send(string_result)
